@@ -105,6 +105,7 @@ class Enrollment(models.Model):
     # Other fields and methods you would like to design
 class Question(models.Model):
     # Foreign key to lesson
+    
     lessons = models.ManyToManyField(Lesson)
     # question text
     question_text= models.CharField(max_length=200)
@@ -118,6 +119,8 @@ class Question(models.Model):
            return True
        else:
            return False
+    def __str__(self):
+       return self.question_text
 
 #  <HINT> Create a Choice Model with:
     # Used to persist choice content for a question
@@ -126,9 +129,11 @@ class Question(models.Model):
     # Indicate if this choice of the question is a correct one or not
     # Other fields and methods you would like to design
 class Choice(models.Model):
-    choice_content = models.CharField(max_length=1)
+    choice_content = models.CharField(max_length=200)
+    questions = models.ManyToManyField(Question)
     is_correct = models.BooleanField()
-    question_set = models.ManyToManyField(Question)
+    def __str__(self):
+        return self.choice_content    
 
 # <HINT> The submission model
 # One enrollment could have multiple submission
