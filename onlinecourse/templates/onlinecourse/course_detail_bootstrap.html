@@ -66,16 +66,22 @@
             {% if user.is_authenticated %}
             <button data-toggle="collapse" data-target="#exam" class="btn btn-primary btn-lg btn-block">Start Exam</button>
             <div id="exam" class="collapse">
-                <form>
+                <form id="exam-submit" action="{% url 'onlinecourse:submit' course.id %}" method="post">
                 <div class = "card">
-                {% for question in question_list %}
+                {% for ind, question in question_list %}
                     <div class="card-header">
+                        {% csrf_token %}
                         <h5>{{question}}</h5>
                     </div>
                     <div class="card-body">
                         {% for choice in question.choice_set.all %}
-                        <input type="checkbox" value={{choice.id}} />
-                        {{choice}} <br>
+                         <div class="form-check">
+                                    <label class="form-check-label">
+                                        <input type="checkbox" name="choice_{{ind}}"
+                                               class="form-check-input" id="{{choice.id}}"
+                                               value="{{choice.id}}">{{ choice.choice_content }}
+                                    </label>
+                                </div>
                         {% endfor %}
                     </div>
                 {% endfor %}

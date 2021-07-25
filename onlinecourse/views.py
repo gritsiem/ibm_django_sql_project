@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 # <HINT> Import any new Models here
-from .models import Course, Enrollment, Question
+from .models import Course, Enrollment, Question, Choice, Submission
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
@@ -93,8 +93,7 @@ class CourseDetailView(generic.DetailView):
         current_course = kwargs['object']
         questions = [q for lesson in current_course.lesson_set.all() for q in lesson.question_set.all() if q]
         choices = [c for q in questions for c in q.choice_set.all() if c]
-        # print("Questions: ",questions,'\n',choices)
-        context['question_list'] = questions
+        context['question_list'] = zip(range(1,1+len(questions)),questions)
         return context
 
 def enroll(request, course_id):
@@ -118,13 +117,23 @@ def enroll(request, course_id):
          # Collect the selected choices from exam form
          # Add each selected choice object to the submission object
          # Redirect to show_exam_result with the submission id
-#def submit(request, course_id):
 
+def submit(request, course_id):
+    user = request.user
+    enrollment = Enrollment.objects.get(user=user, course=Course.objects.get(pk=course_id))
+    choices = []
+    submission = Submission.objects.create(enrollment=enrollment)
+    for key,val in request.POST.items():
+        print(key,val)
+        if key.find("choice")>-1:
+            choices.append(Choice.objects.get(pk=val))
+    submission.choices.set(choices)
+    return redirect("onlinecourse:result")
 
 # <HINT> A example method to collect the selected choices from the exam form from the request object
 #def extract_answers(request):
 #    submitted_anwsers = []
-#    for key in request.POST:
+#    for key in request.POST
 #        if key.startswith('choice'):
 #            value = request.POST[key]
 #            choice_id = int(value)
@@ -138,7 +147,8 @@ def enroll(request, course_id):
         # Get the selected choice ids from the submission record
         # For each selected choice, check if it is a correct answer or not
         # Calculate the total score
-#def show_exam_result(request, course_id, submission_id):
+def show_exam_result(request, course_id, submission_id):
+    return render(request, 'onlinecourse/exam_result_bootstrap.html')
 
 
 
