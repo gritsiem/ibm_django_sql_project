@@ -64,14 +64,24 @@
             -->
 
             {% if user.is_authenticated %}
-            <button data-toggle="collapse" data-target="#exam">Start Exam</button>
+            <button data-toggle="collapse" data-target="#exam" class="btn btn-primary btn-lg btn-block">Start Exam</button>
             <div id="exam" class="collapse">
+                <form>
+                <div class = "card">
                 {% for question in question_list %}
-                    {{question}}
-                    {% for choice in question.choice_set.all %}
-                    {{choice}}
-                    {% endfor %}
+                    <div class="card-header">
+                        <h5>{{question}}</h5>
+                    </div>
+                    <div class="card-body">
+                        {% for choice in question.choice_set.all %}
+                        <input type="checkbox" value={{choice.id}} />
+                        {{choice}} <br>
+                        {% endfor %}
+                    </div>
                 {% endfor %}
+                </div>
+                <button type="submit" class="btn btn-success btn-block btn-lg"> Submit</button>
+                </form>
             </div>
             {% endif %}
             <!-- <HINT> If user is authenticated, show course exam with a list of question -->

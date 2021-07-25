@@ -90,7 +90,11 @@ class CourseDetailView(generic.DetailView):
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get a context
         context = super().get_context_data(**kwargs)
-        context['question_list'] = Question.objects.all()
+        current_course = kwargs['object']
+        questions = [q for lesson in current_course.lesson_set.all() for q in lesson.question_set.all() if q]
+        choices = [c for q in questions for c in q.choice_set.all() if c]
+        # print("Questions: ",questions,'\n',choices)
+        context['question_list'] = questions
         return context
 
 def enroll(request, course_id):

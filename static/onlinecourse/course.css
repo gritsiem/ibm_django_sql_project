@@ -175,3 +175,10 @@ input[type=text]:focus, input[type=password]:focus {
 .dropdown:hover .dropdown-content {display: block;}
 
 .dropdown:hover .dropbtn {background-color: darkblue;}
+
+.exam-button{
+    width:100%;
+    background:lightblue;
+    color:white;
+    text-align:center;
+}
