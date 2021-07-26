@@ -28,6 +28,7 @@ class LessonAdmin(admin.ModelAdmin):
 
 class ChoiceAdmin(admin.ModelAdmin):
     model = Choice
+    exclude = ['questions']
     list_display = ['choice_content']
     # inlines = [QuestionInline]
 
